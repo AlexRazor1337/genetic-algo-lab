@@ -5,92 +5,113 @@ class Individual {
     }
 
     getFitnes() {
-        return this.chromosome.reduce((acc, cur) => acc + cur, 0);
+        this.fitness = this.chromosome.reduce((acc, cur) => acc + cur, 0)
+        return this.fitness;
     }
 }
 
 class Genetic {
-    constructor(populationSize, chromosomeSize) {
+    constructor(populationSize, eliteSize, chromosomeSize) {
         this.populationSize = populationSize;
         this.chromosomeSize = chromosomeSize;
+        this.eliteSize = eliteSize;
 
         this.epochCount = 0;
 
-        this.mutationProb = 0.1; // TODO pass as parameter
-        this.crossoverProb = 0.9;
+        this.mutationProb = 0.01; // TODO pass as parameter
+        this.crossoverProb = 0.4;
+        this.selectionFactor = 0.9;
 
         this.population = new Array(this.populationSize).fill();
         this.population = this.population.map(() => new Individual(chromosomeSize));
+
+        this.elite = new Array(this.eliteSize).fill();
+        this.elite = this.elite.map(() => new Individual(chromosomeSize));
+
         this.meanFitness = [];
         this.maxFitness = [];
         this.currentFitness = [];
     }
 
-    step() {
-        this.epochCount += 1;
+    selection() {
+        const newPopulation = [];
 
-        this.population = this.selection();
-        this.crossover();
-        this.mutation();
+        for (let i = 0; i < this.eliteSize; i++) {
+            this.population[i] = this.elite[i];
+        }
 
         this.currentFitness = this.population.map(individual => individual.getFitnes());
-        this.meanFitness.push(this.currentFitness.reduce((acc, cur) => acc + cur, 0) / this.population.length);
-        this.maxFitness.push(Math.max(...this.currentFitness));
-    }
+        const minFitness = Math.min(...this.currentFitness);
+        const maxFitness = Math.max(...this.currentFitness);
+        const bestIndividual = this.population.find(individual => individual.fitness == maxFitness);
+        console.log('Best individual: ', bestIndividual);
 
-    selection() {
-        const offspring = [];
-        this.population.forEach(() => {
-            let firstInd, secondInd, thirdInd;
-            firstInd = secondInd = thirdInd = 0;
-            while (firstInd === secondInd || firstInd === thirdInd || secondInd === thirdInd) {
-                firstInd = Math.floor(Math.random() * this.population.length);
-                secondInd = Math.floor(Math.random() * this.population.length);
-                thirdInd = Math.floor(Math.random() * this.population.length);
+        if (maxFitness !== minFitness) {
+            let N = 0;
+            while (N < this.populationSize) {
+                const num = Math.floor(Math.random() * this.population.length);
+                if (this.selectionFactor * Math.random() < (this.currentFitness[num] - minFitness) / (maxFitness - minFitness)) {
+                    newPopulation.push(this.population[num]);
+                    N++;
+                }
             }
 
-            // select idividual with max fitness
-            // TODO optimize
-            const maxFitness = Math.max(this.population[firstInd].getFitnes(), this.population[secondInd].getFitnes(), this.population[thirdInd].getFitnes());
-            offspring.push(this.population.find(individual => individual.getFitnes() === maxFitness));
-        });
+            this.population.sort((a, b) => b.getFitnes() - a.getFitnes());
 
-        return offspring;
+            for (let i = 0; i < this.eliteSize; i++) {
+                this.elite[i] = this.population[i];
+            }
+
+            for (let i = 0; i < this.population.length; i++) {
+                this.population[i] = newPopulation[i];
+            }
+        }
     }
 
     crossover() {
-        for (let i = 0; i < this.population.length; i += 2) {
+        for (let i = 0; i < this.population.length; i++) {
             if (Math.random() < this.crossoverProb) {
-                const splitIndex = Math.floor(Math.random() * (this.chromosomeSize));
-                const firstChromosomeParts = [this.population[i].chromosome.slice(0, splitIndex), this.population[i].chromosome.slice(splitIndex)]
-                const secondChromosomeParts = [this.population[i + 1].chromosome.slice(0, splitIndex), this.population[i + 1].chromosome.slice(splitIndex)]
-
-                this.population[i].chromosome = firstChromosomeParts[0].concat(secondChromosomeParts[1]);
-                this.population[i + 1].chromosome = secondChromosomeParts[0].concat(firstChromosomeParts[1]);
+                const j = Math.floor(Math.random() * this.population.length);
+                if (i != j) {
+                    const pos = Math.floor(Math.random() * (this.chromosomeSize));
+                    for (let k = 0; k < pos; k++) {
+                        const temp = this.population[i].chromosome[k];
+                        this.population[i].chromosome[k] = this.population[j].chromosome[k];
+                        this.population[j].chromosome[k] = temp;
+                    }
+                }
             }
         }
     }
 
     mutation() {
         for (let i = 0; i < this.population.length; i++) {
-            if (Math.random() < this.mutationProb) {
-                for (let j = 0; j < this.chromosomeSize; j++) {
-                    if (Math.random() < 0.01) {
-                        this.population[i].chromosome[j] = Number(!this.population[i].chromosome[j]);
-                    }
+            for (let j = 0; j < this.chromosomeSize; j++) {
+                if (Math.random() < this.mutationProb) {
+                    this.population[i].chromosome[j] = 1 - this.population[i].chromosome[j];
                 }
             }
         }
     }
+
+    step() {
+        this.epochCount += 1;
+
+        this.mutation();
+        this.crossover();
+        this.selection();
+
+        this.currentFitness = this.population.map(individual => individual.getFitnes());
+        this.meanFitness.push(this.currentFitness.reduce((acc, cur) => acc + cur, 0) / this.population.length);
+        this.maxFitness.push(Math.max(...this.currentFitness));
+    }
 }
 
 
-
-
 window.onload = function () {
-    const algo = new Genetic(200, 100);
+    const algo = new Genetic(100, 5, 20);
     while (Math.max(...algo.currentFitness) < algo.chromosomeSize && algo.epochCount < 50) {
-        algo.step()
+        algo.step();
     }
     console.log(algo);
 
@@ -101,10 +122,10 @@ window.onload = function () {
             labels: algo.meanFitness.map((_, i) => i),
             datasets: [
                 {
-                label: 'Mean fitness',
-                backgroundColor: 'rgb(255, 99, 132)',
-                borderColor: 'rgb(255, 99, 132)',
-                data: algo.meanFitness,
+                    label: 'Mean fitness',
+                    backgroundColor: 'rgb(255, 99, 132)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: algo.meanFitness,
                 },
                 {
                     label: 'Max fitness',
