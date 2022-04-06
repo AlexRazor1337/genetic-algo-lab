@@ -21,9 +21,9 @@ class Genetic {
 
         this.population = new Array(this.populationSize).fill();
         this.population = this.population.map(() => new Individual(chromosomeSize));
-        this.meanFitness = []
-        this.maxFitness = []
-        this.currentFitness = []
+        this.meanFitness = [];
+        this.maxFitness = [];
+        this.currentFitness = [];
     }
 
     step() {
@@ -35,7 +35,7 @@ class Genetic {
 
         this.currentFitness = this.population.map(individual => individual.getFitnes());
         this.meanFitness.push(this.currentFitness.reduce((acc, cur) => acc + cur, 0) / this.population.length);
-        this.maxFitness.push(Math.max(...this.currentFitness))
+        this.maxFitness.push(Math.max(...this.currentFitness));
     }
 
     selection() {
@@ -86,7 +86,7 @@ class Genetic {
 
 
 window.onload = function () {
-    const algo = new Genetic(200, 100);
+    const algo = new Genetic(30, 15);
     while (Math.max(...algo.currentFitness) < algo.chromosomeSize && algo.epochCount < 50) {
         algo.step()
     }
