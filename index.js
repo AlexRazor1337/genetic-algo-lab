@@ -18,7 +18,6 @@ class Genetic {
 
         this.mutationProb = 0.1; // TODO pass as parameter
         this.crossoverProb = 0.9;
-        this.selectionFactor = 0.90;
 
         this.population = new Array(this.populationSize).fill();
         this.population = this.population.map(() => new Individual(chromosomeSize));
