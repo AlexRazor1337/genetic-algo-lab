@@ -16,7 +16,7 @@ class Genetic {
 
         this.epochCount = 0;
 
-        this.mutationProb = 0.05; // TODO pass as parameter
+        this.mutationProb = 0.1; // TODO pass as parameter
         this.crossoverProb = 0.9;
 
         this.population = new Array(this.populationSize).fill();
@@ -61,7 +61,7 @@ class Genetic {
     crossover() {
         for (let i = 0; i < this.population.length; i += 2) {
             if (Math.random() < this.crossoverProb) {
-                const splitIndex = Math.floor(Math.random() * this.chromosomeSize);
+                const splitIndex = Math.floor(Math.random() * (this.chromosomeSize));
                 const firstChromosomeParts = [this.population[i].chromosome.slice(0, splitIndex), this.population[i].chromosome.slice(splitIndex)]
                 const secondChromosomeParts = [this.population[i + 1].chromosome.slice(0, splitIndex), this.population[i + 1].chromosome.slice(splitIndex)]
 
@@ -73,9 +73,11 @@ class Genetic {
 
     mutation() {
         for (let i = 0; i < this.population.length; i++) {
-            for (let j = 0; j < this.chromosomeSize; j++) {
-                if (Math.random() < this.mutationProb) {
-                    this.population[i].chromosome[j] = !this.population[i].chromosome[j];
+            if (Math.random() < this.mutationProb) {
+                for (let j = 0; j < this.chromosomeSize; j++) {
+                    if (Math.random() < 0.01) {
+                        this.population[i].chromosome[j] = Number(!this.population[i].chromosome[j]);
+                    }
                 }
             }
         }
@@ -98,18 +100,18 @@ window.onload = function () {
         data: {
             labels: algo.meanFitness.map((_, i) => i),
             datasets: [
-            {
-              label: 'Mean fitness',
-              backgroundColor: 'rgb(255, 99, 132)',
-              borderColor: 'rgb(255, 99, 132)',
-              data: algo.meanFitness,
-            },
-            {
-                label: 'Max fitness',
-                backgroundColor: 'rgb(0, 99, 132)',
-                borderColor: 'rgb(0, 99, 132)',
-                data: algo.maxFitness,
-              }
+                {
+                label: 'Mean fitness',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: algo.meanFitness,
+                },
+                {
+                    label: 'Max fitness',
+                    backgroundColor: 'rgb(0, 99, 132)',
+                    borderColor: 'rgb(0, 99, 132)',
+                    data: algo.maxFitness,
+                }
             ]
           },
         options: {}
