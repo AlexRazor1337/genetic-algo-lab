@@ -17,13 +17,14 @@ class Genetic {
         this.epochCount = 0;
 
         this.mutationProb = 0.1; // TODO pass as parameter
-        this.crossoverProb = 0.90;
+        this.crossoverProb = 0.9;
         this.selectionFactor = 0.90;
 
         this.population = new Array(this.populationSize).fill();
         this.population = this.population.map(() => new Individual(chromosomeSize));
         this.meanFitness = []
         this.maxFitness = []
+        this.currentFitness = []
     }
 
     step() {
@@ -33,9 +34,9 @@ class Genetic {
         this.crossover();
         this.mutation();
 
-        const currentFitness = this.population.map(individual => individual.getFitnes());
-        this.meanFitness.push(currentFitness.reduce((acc, cur) => acc + cur, 0) / this.population.length);
-        this.maxFitness.push(Math.max(...currentFitness))
+        this.currentFitness = this.population.map(individual => individual.getFitnes());
+        this.meanFitness.push(this.currentFitness.reduce((acc, cur) => acc + cur, 0) / this.population.length);
+        this.maxFitness.push(Math.max(...this.currentFitness))
     }
 
     selection() {
@@ -52,9 +53,7 @@ class Genetic {
             // select idividual with max fitness
             // TODO optimize
             const maxFitness = Math.max(this.population[firstInd].getFitnes(), this.population[secondInd].getFitnes(), this.population[thirdInd].getFitnes());
-            const maxInd = this.population.findIndex(individual => individual.getFitnes() === maxFitness);
-
-            offspring.push(this.population[maxInd]);
+            offspring.push(this.population.find(individual => individual.getFitnes() === maxFitness));
         });
 
         return offspring;
@@ -62,7 +61,7 @@ class Genetic {
 
     crossover() {
         for (let i = 0; i < this.population.length; i += 2) {
-            if (Math.random() > this.crossoverProb) {
+            if (Math.random() < this.crossoverProb) {
                 const splitIndex = Math.floor(Math.random() * this.chromosomeSize);
                 const firstChromosomeParts = [this.population[i].chromosome.slice(0, splitIndex), this.population[i].chromosome.slice(splitIndex)]
                 const secondChromosomeParts = [this.population[i + 1].chromosome.slice(0, splitIndex), this.population[i + 1].chromosome.slice(splitIndex)]
@@ -76,7 +75,7 @@ class Genetic {
     mutation() {
         for (let i = 0; i < this.population.length; i++) {
             for (let j = 0; j < this.chromosomeSize; j++) {
-                if (Math.random() > this.mutationProb) {
+                if (Math.random() < this.mutationProb) {
                     this.population[i].chromosome[j] = !this.population[i].chromosome[j];
                 }
             }
@@ -89,11 +88,11 @@ class Genetic {
 
 window.onload = function () {
     const algo = new Genetic(200, 100);
-    while (algo.epochCount < 150) {
+    while (Math.max(...algo.currentFitness) < algo.chromosomeSize && algo.epochCount < 50) {
         algo.step()
     }
     console.log(algo);
-    
+
     const ctx = document.getElementById('myChart').getContext('2d');
     const myChart = new Chart(ctx, {
         type: 'line',
