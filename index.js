@@ -16,7 +16,7 @@ class Genetic {
 
         this.epochCount = 0;
 
-        this.mutationProb = 0.1; // TODO pass as parameter
+        this.mutationProb = 0.05; // TODO pass as parameter
         this.crossoverProb = 0.9;
 
         this.population = new Array(this.populationSize).fill();
@@ -86,23 +86,31 @@ class Genetic {
 
 
 window.onload = function () {
-    const algo = new Genetic(30, 15);
+    const algo = new Genetic(200, 100);
     while (Math.max(...algo.currentFitness) < algo.chromosomeSize && algo.epochCount < 50) {
         algo.step()
     }
     console.log(algo);
 
     const ctx = document.getElementById('myChart').getContext('2d');
-    const myChart = new Chart(ctx, {
+    new Chart(ctx, {
         type: 'line',
         data: {
             labels: algo.meanFitness.map((_, i) => i),
-            datasets: [{
+            datasets: [
+            {
               label: 'Mean fitness',
               backgroundColor: 'rgb(255, 99, 132)',
               borderColor: 'rgb(255, 99, 132)',
               data: algo.meanFitness,
-            }]
+            },
+            {
+                label: 'Max fitness',
+                backgroundColor: 'rgb(0, 99, 132)',
+                borderColor: 'rgb(0, 99, 132)',
+                data: algo.maxFitness,
+              }
+            ]
           },
         options: {}
     });
