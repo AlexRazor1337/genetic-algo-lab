@@ -3,7 +3,7 @@ import Genetic from './algorithm.js';
 
 window.onload = function () {
     const algo = new Genetic(100, 5, 20);
-    while (algo.epochCount < 50) { // Math.max(...algo.currentFitness) < algo.chromosomeSize &&
+    while (algo.epochCount < 100) { // Math.max(...algo.currentFitness) < algo.chromosomeSize &&
         algo.step();
     }
     console.log(algo);

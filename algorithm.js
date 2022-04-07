@@ -13,6 +13,10 @@ class Individual {
         this.fitness = first*first/200 + second*second/200 + Math.cos(first)*Math.cos(second);
         return this.fitness;
     }
+    // getFitnes() {
+    //     this.fitness = this.chromosome.reduce((acc, cur) => acc + cur, 0);
+    //     return this.fitness;
+    // }
 }
 
 export default class Genetic {
