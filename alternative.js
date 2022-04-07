@@ -5,12 +5,13 @@ class Individual {
     }
 
     getFitnes() {
-        return this.chromosome.reduce((acc, cur) => acc + cur, 0);
+        this.fitness = this.chromosome.reduce((acc, cur) => acc + cur, 0);
+        return this.fitness;
     }
 }
 
 export default class Genetic {
-    constructor(populationSize, eliteSize, chromosomeSize) {
+    constructor(populationSize, _, chromosomeSize) {
         this.populationSize = populationSize;
         this.chromosomeSize = chromosomeSize;
 

@@ -1,9 +1,9 @@
-// import Genetic from './algorithm.js';
-import Genetic from './alternative.js';
+import Genetic from './algorithm.js';
+// import Genetic from './alternative.js';
 
 window.onload = function () {
     const algo = new Genetic(100, 5, 20);
-    while (Math.max(...algo.currentFitness) < algo.chromosomeSize && algo.epochCount < 50) {
+    while (algo.epochCount < 50) { // Math.max(...algo.currentFitness) < algo.chromosomeSize &&
         algo.step();
     }
     console.log(algo);

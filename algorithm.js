@@ -5,7 +5,12 @@ class Individual {
     }
 
     getFitnes() {
-        this.fitness = this.chromosome.reduce((acc, cur) => acc + cur, 0)
+        let first = this.chromosome.slice(0, this.chromosome.length / 2);
+        let second = this.chromosome.slice(this.chromosome.length / 2);
+        first = parseInt(first.join(''), 2) * 100 - 50;
+        second = parseInt(second.join(''), 2) * 100 - 50;
+
+        this.fitness = first*first/200 + second*second/200 + Math.cos(first)*Math.cos(second);
         return this.fitness;
     }
 }
@@ -18,7 +23,7 @@ export default class Genetic {
 
         this.epochCount = 0;
 
-        this.mutationProb = 0.01; // TODO pass as parameter
+        this.mutationProb = 0.005; // TODO pass as parameter
         this.crossoverProb = 0.4;
         this.selectionFactor = 0.9;
 
