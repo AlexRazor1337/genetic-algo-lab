@@ -111,7 +111,7 @@ class Population {
         this.populationSize = populationSize;
         this.population = new Array(this.populationSize).fill();
         this.population = this.population.map(() => new Individual(chromosomeSize));
-        this.fittest = 0; // int, fitness of fittest individual
+        this.maxFitness = 0; // int, fitness of fittest individual
     }
 
     getFittest() {
