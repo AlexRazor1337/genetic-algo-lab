@@ -4,13 +4,44 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Genetic algorithm</title>
     <script src="chart.min.js"></script>
-    <script src="index.js" type="module"></script>
+    <script src="index.js" type="module" defer></script>
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <div style="width: 80vh;">
-        <canvas id="myChart" width="1" height="1"></canvas>
+    <div id="container">
+        <div class="row">
+            <div>
+                <label>Population size:</label><br>
+                <input type="text" id="input1" value="100">
+            </div>
+            <div>
+                <label>Chromosome size:</label><br>
+                <input type="text" id="input2" value="20">
+            </div>
+            <div>
+                <label>Mutation chance:</label><br>
+                <input type="text" id="input3" value="0.05">
+            </div>
+            <div>
+                <label>Crossover chance:</label><br>
+                <input type="text" id="input4" value="0.5">
+            </div>
+            <div>
+                <label>Max iterations:</label><br>
+                <input type="text" id="input5" value="50">
+            </div>
+        </div>
+
+        <div id="loader" class="hidden"></div>
+
+        <div style="width: 80vh;">
+            <canvas id="chart" width="1" height="1" class="hidden"></canvas>
+        </div>
+        <div>
+            <button id="submit">Run</button>
+        </div>
     </div>
 </body>
 </html>

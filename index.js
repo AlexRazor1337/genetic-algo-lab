@@ -1,15 +1,28 @@
-// import Genetic from './algorithm.js';
-// import Genetic from './alternative.js';
-import Genetic from './new.js';
+import Genetic from './implementations/new.js';
 
-window.onload = function () {
-    const algo = new Genetic(200, 20, 0.05);
-    while (algo.epochCount < 100) { // Math.max(...algo.currentFitness) < algo.chromosomeSize &&
+document.getElementById('submit').addEventListener('click', function () {
+    const rows =  Array.from(document.getElementsByClassName('row'));
+    rows.forEach(row => row.classList.add('hidden'));
+
+    document.getElementById('loader').classList.remove('hidden');
+
+    const populationSize = Number(document.getElementById('input1').value);
+    const chromosomeSize = Number(document.getElementById('input2').value);
+    const mutationChance = Number(document.getElementById('input3').value);
+    const crossoverChance = Number(document.getElementById('input4').value);
+    const maxIterations = Number(document.getElementById('input5').value);
+
+    const algo = new Genetic(populationSize, chromosomeSize, mutationChance, crossoverChance);
+    while (algo.epochCount < maxIterations) { // Math.max(...algo.currentFitness) < algo.chromosomeSize &&
         algo.step();
     }
-    console.log(algo);
 
-    const ctx = document.getElementById('myChart').getContext('2d');
+    document.getElementById('loader').classList.add('hidden');
+    document.getElementById('chart').classList.remove('hidden');
+
+    if (Chart.getChart("chart")) Chart.getChart("chart").destroy();
+    const ctx = document.getElementById('chart').getContext('2d');
+
     new Chart(ctx, {
         type: 'line',
         data: {
@@ -31,4 +44,4 @@ window.onload = function () {
           },
         options: {}
     });
-}
+});

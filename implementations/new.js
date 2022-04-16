@@ -15,10 +15,11 @@ class Individual {
 }
 
 export default class Genetic {
-    constructor(populationSize, chromosomeSize, mutationChance) {
+    constructor(populationSize, chromosomeSize, mutationChance, crossoverChance) {
         this.chromosomeSize = chromosomeSize;
         this.populationSize = populationSize;
         this.mutationChance = mutationChance;
+        this.crossoverChance = crossoverChance;
         this.population = new Population(populationSize, chromosomeSize);
         this.fittest; // Individual
         this.secondFittest; // Individual
@@ -38,17 +39,14 @@ export default class Genetic {
     }
 
     crossover() {
-        for (let i = 0; i < this.population.length; i++) {
-            if (Math.random() < 0.4) {
-                const j = Math.floor(Math.random() * this.population.length);
-                if (i != j) {
-                    const pos = Math.floor(Math.random() * (this.chromosomeSize));
-                    for (let k = 0; k < pos; k++) {
-                        const temp = this.population[i].chromosome[k];
-                        this.population[i].chromosome[k] = this.population[j].chromosome[k];
-                        this.population[j].chromosome[k] = temp;
-                    }
-                }
+        for (let i = 0; i < this.populationSize; i += 2) {
+            if (Math.random() < 0.5) {
+                const splitIndex = Math.floor(Math.random() * (this.chromosomeSize));
+                const firstChromosomeParts = [this.population.population[i].chromosome.slice(0, splitIndex), this.population.population[i].chromosome.slice(splitIndex)]
+                const secondChromosomeParts = [this.population.population[i + 1].chromosome.slice(0, splitIndex), this.population.population[i + 1].chromosome.slice(splitIndex)]
+
+                this.population.population[i].chromosome = firstChromosomeParts[0].concat(secondChromosomeParts[1]);
+                this.population.population[i + 1].chromosome = secondChromosomeParts[0].concat(firstChromosomeParts[1]);
             }
         }
     }
@@ -83,7 +81,7 @@ export default class Genetic {
         this.fittest.getFitness();
         this.secondFittest.getFitness();
 
-        this.population.sort((a, b) => a.fitness - b.fitness);
+        this.population.population.sort((a, b) => a.fitness - b.fitness);
 
         //Replace least fittest individual from most fittest offspring
         this.population.population[0] = this.getFittestOffspring();
