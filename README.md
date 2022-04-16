@@ -30,5 +30,5 @@ Work result:
 
 # Docs
 
-Class diagram:
+Class diagram:  
 ![Class diagram](docs/class_diagram.png)
