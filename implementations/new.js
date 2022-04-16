@@ -41,11 +41,13 @@ export default class Genetic {
         for (let i = 0; i < this.populationSize; i += 2) {
             if (Math.random() < this.crossoverChance) {
                 const splitIndex = Math.floor(Math.random() * (this.chromosomeSize));
-                const firstChromosomeParts = [this.population.population[i].chromosome.slice(0, splitIndex), this.population.population[i].chromosome.slice(splitIndex)]
-                const secondChromosomeParts = [this.population.population[i + 1].chromosome.slice(0, splitIndex), this.population.population[i + 1].chromosome.slice(splitIndex)]
+                const population = this.population.population;
 
-                this.population.population[i].chromosome = firstChromosomeParts[0].concat(secondChromosomeParts[1]);
-                this.population.population[i + 1].chromosome = secondChromosomeParts[0].concat(firstChromosomeParts[1]);
+                const firstChromosomeParts = [population[i].chromosome.slice(0, splitIndex), population[i].chromosome.slice(splitIndex)]
+                const secondChromosomeParts = [population[i + 1].chromosome.slice(0, splitIndex), population[i + 1].chromosome.slice(splitIndex)]
+
+                population[i].chromosome = firstChromosomeParts[0].concat(secondChromosomeParts[1]);
+                population[i + 1].chromosome = secondChromosomeParts[0].concat(firstChromosomeParts[1]);
             }
         }
     }
