@@ -80,16 +80,13 @@ export default class Genetic {
 
     // Replace least fittest individual from most fittest offspring
     addFittestOffspring() {
-
-        //Update fitness values of offspring
         this.fittest.getFitness();
         this.secondFittest.getFitness();
 
-        //Get index of least fit individual
-        let leastFittestIndex = this.population.getLeastFittestIndex();
+        this.population.sort((a, b) => a.fitness - b.fitness);
 
         //Replace least fittest individual from most fittest offspring
-        this.population.population[leastFittestIndex] = this.getFittestOffspring();
+        this.population.population[0] = this.getFittestOffspring();
     }
 
     step() {
@@ -121,48 +118,17 @@ class Population {
     }
 
     getFittest() {
-        let maxFit = Number.MIN_SAFE_INTEGER;
-        let maxFitIndex = 0;
-        for (let i = 0; i < this.population.length; i++) {
-            if (maxFit <= this.population[i].fitness) {
-                maxFit = this.population[i].fitness;
-                maxFitIndex = i;
-            }
-        }
-
-        this.fittest = this.population[maxFitIndex].fitness;
-        return this.population[maxFitIndex];
+        this.population.sort((a, b) => a.fitness - b.fitness);
+        this.fittes = this.population[this.population.length - 1].fitness;
+        return this.population[this.population.length - 1];
     }
 
     getSecondFittest() {
-        let maxFit1 = 0;
-        let maxFit2 = 0;
-        for (let i = 0; i < this.population.length; i++) {
-            if (this.population[i].fitness > this.population[maxFit1].fitness) {
-                maxFit2 = maxFit1;
-                maxFit1 = i;
-            } else if (this.population[i].fitness > this.population[maxFit2].fitness) {
-                maxFit2 = i;
-            }
-        }
+        this.population.sort((a, b) => a.fitness - b.fitness);
 
-        return this.population[maxFit2];
+        return this.population[this.population.length - 2];
     }
 
-    // Get index of least fittest individual
-    getLeastFittestIndex() { // int
-        let minFitVal = Number.MAX_SAFE_INTEGER;
-        let minFitIndex = 0;
-        for (let i = 0; i < this.population.length; i++) {
-            if (minFitVal >= this.population[i].fitness) {
-                minFitVal = this.population[i].fitness;
-                minFitIndex = i;
-            }
-        }
-        return minFitIndex;
-    }
-
-    // Calculate fitness of each individual
     calculateFitness() {
         for (let i = 0; i < this.population.length; i++) {
             this.population[i].getFitness();
