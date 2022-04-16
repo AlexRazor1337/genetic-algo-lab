@@ -15,6 +15,7 @@ document.getElementById('submit').addEventListener('click', function () {
     const algo = new Genetic(populationSize, chromosomeSize, mutationChance, crossoverChance);
     while (algo.epochCount < maxIterations) { // Math.max(...algo.currentFitness) < algo.chromosomeSize &&
         algo.step();
+        console.log("Generation:", algo.epochCount, "Fittest:" , algo.fittest);
     }
 
     document.getElementById('loader').classList.add('hidden');

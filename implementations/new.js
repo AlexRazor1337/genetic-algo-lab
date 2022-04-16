@@ -98,8 +98,6 @@ export default class Genetic {
 
         this.population.calculateFitness();
 
-        console.log("Generation: " + this.epochCount + " Fittest: " + this.population.fittest);
-
         this.currentFitness = this.population.population.map(individual => individual.getFitness());
         this.meanFitness.push(this.currentFitness.reduce((acc, cur) => acc + cur, 0) / this.population.population.length);
         this.maxFitness.push(Math.max(...this.currentFitness));
