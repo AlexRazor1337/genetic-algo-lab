@@ -1,10 +1,14 @@
 import Genetic from './implementations/new.js';
 
-document.getElementById('submit').addEventListener('click', function () {
+document.getElementById('submit').addEventListener('click', async function () {
     const rows =  Array.from(document.getElementsByClassName('row'));
     rows.forEach(row => row.classList.add('hidden'));
 
-    document.getElementById('loader').classList.remove('hidden');
+    if (document.getElementById('chart').classList.contains('hidden')) {
+        document.getElementById('loader').classList.remove('hidden');
+        document.getElementById('submit').classList.add('hidden');
+        await new Promise(r => setTimeout(r, 10));
+    }
 
     const populationSize = Number(document.getElementById('input1').value);
     const chromosomeSize = Number(document.getElementById('input2').value);
@@ -20,7 +24,7 @@ document.getElementById('submit').addEventListener('click', function () {
 
     document.getElementById('loader').classList.add('hidden');
     document.getElementById('chart').classList.remove('hidden');
-
+    document.getElementById('submit').classList.remove('hidden');
     if (Chart.getChart("chart")) Chart.getChart("chart").destroy();
     const ctx = document.getElementById('chart').getContext('2d');
 
