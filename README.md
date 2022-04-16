@@ -23,12 +23,12 @@ To see the code in action just open `index.html` in the browser.
 
 # Screenshots
 Parameters for the algorithm:
-![main](docs\main.png)
+![main](docs/main.png)
 
 Work result:
-![graph](docs\graph.png)
+![graph](docs/graph.png)
 
 # Docs
 
 Class diagram:
-![Class diagram](docs\class_diagram.png)
+![Class diagram](docs/class_diagram.png)
