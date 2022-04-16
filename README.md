@@ -11,6 +11,8 @@ It can be used with a **Node.js** or in browser as you can see in `index.html`.
 
 Example:
 ```javascript
+import Genetic from './implementations/new.js';
+
 const algo = new Genetic(populationSize, chromosomeSize, mutationChance, crossoverChance);
 while (algo.epochCount < maxIterations) {
     algo.step();
@@ -20,6 +22,7 @@ while (algo.epochCount < maxIterations) {
 
 Another example of usage can be found in `index.js` file.
 To see the code in action just open `index.html` in the browser.
+There are three implementations of the algorithm. I recommend using `new.js` because it is the one working properly for sure. Others are a bit questionable at the moment.
 
 # Screenshots
 Parameters for the algorithm:
