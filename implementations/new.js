@@ -20,6 +20,7 @@ export default class Genetic {
         this.populationSize = populationSize;
         this.mutationChance = mutationChance;
         this.crossoverChance = crossoverChance;
+
         this.population = new Population(populationSize, chromosomeSize);
         this.fittest; // Individual
         this.secondFittest; // Individual
@@ -31,16 +32,14 @@ export default class Genetic {
     }
 
     selection() {
-        //Select the most fittest individual
         this.fittest = this.population.getFittest();
 
-        //Select the second most fittest individual
         this.secondFittest = this.population.getSecondFittest();
     }
 
     crossover() {
         for (let i = 0; i < this.populationSize; i += 2) {
-            if (Math.random() < 0.5) {
+            if (Math.random() < this.crossoverChance) {
                 const splitIndex = Math.floor(Math.random() * (this.chromosomeSize));
                 const firstChromosomeParts = [this.population.population[i].chromosome.slice(0, splitIndex), this.population.population[i].chromosome.slice(splitIndex)]
                 const secondChromosomeParts = [this.population.population[i + 1].chromosome.slice(0, splitIndex), this.population.population[i + 1].chromosome.slice(splitIndex)]
