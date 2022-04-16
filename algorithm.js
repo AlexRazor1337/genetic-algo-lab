@@ -4,19 +4,25 @@ class Individual {
         this.chromosome = this.chromosome.map(() => Math.round(Math.random()));
     }
 
-    getFitnes() {
-        let first = this.chromosome.slice(0, this.chromosome.length / 2);
-        let second = this.chromosome.slice(this.chromosome.length / 2);
-        first = parseInt(first.join(''), 2) * 100 - 50;
-        second = parseInt(second.join(''), 2) * 100 - 50;
-
-        this.fitness = first*first/200 + second*second/200 + Math.cos(first)*Math.cos(second);
-        return this.fitness;
-    }
     // getFitnes() {
-    //     this.fitness = this.chromosome.reduce((acc, cur) => acc + cur, 0);
+    //     let first = this.chromosome.slice(0, this.chromosome.length / 2);
+    //     let second = this.chromosome.slice(this.chromosome.length / 2);
+    //     first = parseInt(first.join(''), 2) * 100 - 50;
+    //     second = parseInt(second.join(''), 2) * 100 - 50;
+
+    //     this.fitness = first*first/200 + second*second/200 + Math.cos(first)*Math.cos(second);
     //     return this.fitness;
     // }
+    // getFitnes() {
+    //     let x = parseInt(this.chromosome.join(''), 2);
+
+    //     this.fitness = x ** 2 + 4;
+    //     return this.fitness;
+    // }
+    getFitnes() {
+        this.fitness = this.chromosome.reduce((acc, cur) => acc + cur, 0);
+        return this.fitness;
+    }
 }
 
 export default class Genetic {
