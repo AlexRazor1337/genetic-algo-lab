@@ -1,7 +1,7 @@
 import Genetic from './implementations/new.js';
 
 document.getElementById('submit').addEventListener('click', async function () {
-    const rows =  Array.from(document.getElementsByClassName('row'));
+    const rows =  Array.from(document.getElementsByClassName('params'));
     rows.forEach(row => row.classList.add('hidden'));
 
     if (document.getElementById('chart').classList.contains('hidden')) {
@@ -24,9 +24,14 @@ document.getElementById('submit').addEventListener('click', async function () {
 
     document.getElementById('loader').classList.add('hidden');
     document.getElementById('chart').classList.remove('hidden');
+    document.getElementById('chart2').classList.remove('hidden');
     document.getElementById('submit').classList.remove('hidden');
-    if (Chart.getChart("chart")) Chart.getChart("chart").destroy();
+    if (Chart.getChart("chart")) {
+        Chart.getChart("chart").destroy();
+        Chart.getChart("chart2").destroy();
+    }
     const ctx = document.getElementById('chart').getContext('2d');
+    const ctx2 = document.getElementById('chart2').getContext('2d');
 
     new Chart(ctx, {
         type: 'line',
@@ -40,10 +45,23 @@ document.getElementById('submit').addEventListener('click', async function () {
                     data: algo.meanFitness,
                 },
                 {
-                    label: 'Max fitness',
+                    label: 'Best fitness',
                     backgroundColor: 'rgb(0, 99, 132)',
                     borderColor: 'rgb(0, 99, 132)',
-                    data: algo.maxFitness,
+                    data: algo.bestFitness,
+                }
+            ]
+          },
+        options: {}
+    });
+
+    new Chart(ctx2, {
+        type: 'scatter',
+        data: {
+            datasets: [
+                {
+                    label: 'Points',
+                    data: algo.points
                 }
             ]
           },

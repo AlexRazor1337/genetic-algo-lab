@@ -1,3 +1,5 @@
+const closestToZero = (a, b) => Math.abs(a.getFitness()) - Math.abs(b.getFitness());
+
 class Individual {
     constructor(chromosomeSize) {
         this.fitness = 0;
@@ -8,7 +10,12 @@ class Individual {
     }
 
     getFitness() {
-        this.fitness = this.chromosome.reduce((acc, cur) => acc + cur, 0);
+        this.x = parseInt(this.chromosome.slice(0, this.chromosome.length / 2).join(''), 2);
+        this.y = parseInt(this.chromosome.slice(this.chromosome.length / 2).join(''), 2);
+
+        const dest = { x: 2, y: 4 };
+
+        this.fitness = Math.sqrt((dest.x - this.x) ** 2 + (dest.y - this.y) ** 2);
 
         return this.fitness;
     }
@@ -27,8 +34,9 @@ export default class Genetic {
         this.epochCount = 0;
 
         this.meanFitness = [];
-        this.maxFitness = [];
+        this.bestFitness = [];
         this.currentFitness = []
+        this.points = []
     }
 
     selection() {
@@ -56,7 +64,8 @@ export default class Genetic {
         for (let i = 0; i < this.populationSize; i++) {
             let chance = this.mutationChance;
 
-            if (this.population.population[i].fitness >= this.secondFittest.fitness) {
+            const medianFitness = this.currentFitness.reduce((acc, cur) => acc + cur, 0) / this.populationSize;
+            if (this.population.population[i].fitness <= medianFitness) {
                 chance **= 2;
             }
 
@@ -71,9 +80,7 @@ export default class Genetic {
     }
 
     getFittestOffspring() {
-        if (this.fittest.fitness > this.secondFittest.fitness) {
-            return this.fittest;
-        }
+        if (this.fittest.fitness < this.secondFittest.fitness) return this.fittest;
         return this.secondFittest;
     }
 
@@ -82,10 +89,9 @@ export default class Genetic {
         this.fittest.getFitness();
         this.secondFittest.getFitness();
 
-        this.population.population.sort((a, b) => a.fitness - b.fitness);
-
+        this.population.population.sort(closestToZero);
         //Replace least fittest individual from most fittest offspring
-        this.population.population[0] = this.getFittestOffspring();
+        this.population.population[this.population.population.length - 1] = this.getFittestOffspring();
     }
 
     step() {
@@ -101,29 +107,31 @@ export default class Genetic {
 
         this.currentFitness = this.population.population.map(individual => individual.getFitness());
         this.meanFitness.push(this.currentFitness.reduce((acc, cur) => acc + cur, 0) / this.population.population.length);
-        this.maxFitness.push(Math.max(...this.currentFitness));
+        this.bestFitness.push(Math.min(...this.currentFitness));
+
+        const point = this.population.population[Math.floor(this.populationSize / 3)]
+        this.points.push({x: point.x, y: point.y});
     }
 }
-
 
 class Population {
     constructor(populationSize, chromosomeSize) {
         this.populationSize = populationSize;
         this.population = new Array(this.populationSize).fill();
         this.population = this.population.map(() => new Individual(chromosomeSize));
-        this.maxFitness = 0; // int, fitness of fittest individual
     }
 
     getFittest() {
-        this.population.sort((a, b) => a.fitness - b.fitness);
-        this.fittes = this.population[this.population.length - 1].fitness;
-        return this.population[this.population.length - 1];
+        this.population.sort(closestToZero);
+        this.fittes = this.population[0].fitness;
+
+        return this.population[0];
     }
 
     getSecondFittest() {
-        this.population.sort((a, b) => a.fitness - b.fitness);
+        this.population.sort(closestToZero);
 
-        return this.population[this.population.length - 2];
+        return this.population[1];
     }
 
     calculateFitness() {
