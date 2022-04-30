@@ -21,13 +21,12 @@ document.getElementById('submit').addEventListener('click', async function () {
     const mutationChance = Number(document.getElementById('input3').value);
     const crossoverChance = Number(document.getElementById('input4').value);
     const maxIterations = Number(document.getElementById('input5').value);
-    const stopAtBestPossible = Boolean(document.getElementById('input6').value);
+    const stopAtBestPossible = document.getElementById('input6').checked;
 
     const algo = new Genetic(populationSize, chromosomeSize, mutationChance, crossoverChance);
-    while (algo.epochCount < maxIterations && (stopAtBestPossible && algo.bestFitness[algo.bestFitness.length - 1] != 0)) { // Math.max(...algo.currentFitness) < algo.chromosomeSize &&
+    while (algo.epochCount < maxIterations && ((stopAtBestPossible && algo.bestFitness[algo.bestFitness.length - 1] != 0) || !stopAtBestPossible)) {
         algo.step();
         // console.log("Generation:", algo.epochCount, "Fittest:" , algo.fittest);
-        console.log('sb', stopAtBestPossible, algo.bestFitness[algo.bestFitness.length - 1]);
     }
 
     document.getElementById('loader').classList.add('hidden');
