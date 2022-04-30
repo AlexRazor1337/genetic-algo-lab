@@ -33,17 +33,25 @@
                 <label>Max iterations:</label><br>
                 <input type="text" id="input5" value="50">
             </div>
+            <div class="row">
+                <p>Stop at best?</p>
+                <label class="switch">
+                    <input type="checkbox" id="input6">
+                    <span class="slider round"></span>
+                </label>
+            </div>
         </div>
 
         <div id="loader" class="hidden"></div>
 
-        <div class="row">
+        <div id="results" class="row">
             <div style="width: 70vh;">
                 <canvas id="chart" width="1" height="1" class="hidden"></canvas>
             </div>
             <div style="width: 70vh;">
                 <canvas id="chart2" width="1" height="1" class="hidden"></canvas>
             </div>
+            <div id="stats"></div>
         </div>
         <div>
             <button id="submit">Run</button>

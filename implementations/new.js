@@ -35,6 +35,7 @@ export default class Genetic {
 
         this.meanFitness = [];
         this.bestFitness = [];
+        this.bestIndividuals = [];
         this.currentFitness = []
         this.points = []
     }
@@ -108,6 +109,7 @@ export default class Genetic {
         this.currentFitness = this.population.population.map(individual => individual.getFitness());
         this.meanFitness.push(this.currentFitness.reduce((acc, cur) => acc + cur, 0) / this.population.population.length);
         this.bestFitness.push(Math.min(...this.currentFitness));
+        this.bestIndividuals.push(this.population.population.find(individual => individual.fitness === this.bestFitness[this.bestFitness.length - 1]))
 
         const point = this.population.population[Math.floor(this.populationSize / 3)]
         this.points.push({x: point.x, y: point.y});

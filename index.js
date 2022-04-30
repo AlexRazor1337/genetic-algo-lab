@@ -1,8 +1,14 @@
 import Genetic from './implementations/new.js';
 
+const createP = (text) => {
+    const p = document.createElement('p');
+    p.innerText = text;
+    return p;
+}
+
 document.getElementById('submit').addEventListener('click', async function () {
-    const rows =  Array.from(document.getElementsByClassName('params'));
-    rows.forEach(row => row.classList.add('hidden'));
+    const params =  Array.from(document.getElementsByClassName('params'));
+    params.forEach(param => param.classList.add('hidden'));
 
     if (document.getElementById('chart').classList.contains('hidden')) {
         document.getElementById('loader').classList.remove('hidden');
@@ -15,11 +21,13 @@ document.getElementById('submit').addEventListener('click', async function () {
     const mutationChance = Number(document.getElementById('input3').value);
     const crossoverChance = Number(document.getElementById('input4').value);
     const maxIterations = Number(document.getElementById('input5').value);
+    const stopAtBestPossible = Boolean(document.getElementById('input6').value);
 
     const algo = new Genetic(populationSize, chromosomeSize, mutationChance, crossoverChance);
-    while (algo.epochCount < maxIterations) { // Math.max(...algo.currentFitness) < algo.chromosomeSize &&
+    while (algo.epochCount < maxIterations && (stopAtBestPossible && algo.bestFitness[algo.bestFitness.length - 1] != 0)) { // Math.max(...algo.currentFitness) < algo.chromosomeSize &&
         algo.step();
-        console.log("Generation:", algo.epochCount, "Fittest:" , algo.fittest);
+        // console.log("Generation:", algo.epochCount, "Fittest:" , algo.fittest);
+        console.log('sb', stopAtBestPossible, algo.bestFitness[algo.bestFitness.length - 1]);
     }
 
     document.getElementById('loader').classList.add('hidden');
@@ -55,6 +63,17 @@ document.getElementById('submit').addEventListener('click', async function () {
         options: {}
     });
 
+    algo.bestIndividuals.sort((a, b) => a.fitness - b.fitness);
+    const bestIndividual = algo.bestIndividuals[0];
+    document.getElementById('stats').innerHTML = '';
+    [
+        createP('Best individual genes:'),
+        createP(bestIndividual.chromosome.join(' ')),
+        createP('X: ' + parseInt(bestIndividual.chromosome.slice(0, bestIndividual.chromosome.length / 2).join(''), 2)),
+        createP('Y: ' + parseInt(bestIndividual.chromosome.slice(bestIndividual.chromosome.length / 2).join(''), 2)),
+        createP(`Fitness: ${bestIndividual.fitness}`)
+    ].forEach(p => document.getElementById('stats').appendChild(p));
+
     new Chart(ctx2, {
         type: 'scatter',
         data: {
@@ -62,6 +81,11 @@ document.getElementById('submit').addEventListener('click', async function () {
                 {
                     label: 'Points',
                     data: algo.points
+                },
+                {
+                    label: 'Best individual',
+                    backgroundColor: 'rgb(255, 0, 0)',
+                    data: [{x: parseInt(bestIndividual.chromosome.slice(0, bestIndividual.chromosome.length / 2).join(''), 2), y: parseInt(bestIndividual.chromosome.slice(bestIndividual.chromosome.length / 2).join(''), 2)}]
                 }
             ]
           },
