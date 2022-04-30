@@ -1,34 +1,35 @@
 const closestToZero = (a, b) => Math.abs(a.getFitness()) - Math.abs(b.getFitness());
 
 class Individual {
-    constructor(chromosomeSize) {
+    constructor(chromosomeSize, targetX, targetY) {
         this.fitness = 0;
         this.chromosomeSize = chromosomeSize;
 
         this.chromosome = new Array(this.chromosomeSize).fill();
         this.chromosome = this.chromosome.map(() => Math.round(Math.random()));
+
+        this.targetX = targetX;
+        this.targetY = targetY;
     }
 
     getFitness() {
         this.x = parseInt(this.chromosome.slice(0, this.chromosome.length / 2).join(''), 2);
         this.y = parseInt(this.chromosome.slice(this.chromosome.length / 2).join(''), 2);
 
-        const dest = { x: 2, y: 4 };
-
-        this.fitness = Math.sqrt((dest.x - this.x) ** 2 + (dest.y - this.y) ** 2);
+        this.fitness = Math.sqrt((this.targetX - this.x) ** 2 + (this.targetY - this.y) ** 2);
 
         return this.fitness;
     }
 }
 
 export default class Genetic {
-    constructor(populationSize, chromosomeSize, mutationChance, crossoverChance) {
+    constructor(populationSize, chromosomeSize, mutationChance, crossoverChance, targetX, targetY) {
         this.chromosomeSize = chromosomeSize;
         this.populationSize = populationSize;
         this.mutationChance = mutationChance;
         this.crossoverChance = crossoverChance;
 
-        this.population = new Population(populationSize, chromosomeSize);
+        this.population = new Population(populationSize, chromosomeSize, targetX, targetY);
         this.fittest; // Individual
         this.secondFittest; // Individual
         this.epochCount = 0;
@@ -117,10 +118,10 @@ export default class Genetic {
 }
 
 class Population {
-    constructor(populationSize, chromosomeSize) {
+    constructor(populationSize, chromosomeSize, targetX, targetY) {
         this.populationSize = populationSize;
         this.population = new Array(this.populationSize).fill();
-        this.population = this.population.map(() => new Individual(chromosomeSize));
+        this.population = this.population.map(() => new Individual(chromosomeSize, targetX, targetY));
     }
 
     getFittest() {

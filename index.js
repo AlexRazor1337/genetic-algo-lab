@@ -7,8 +7,7 @@ const createP = (text) => {
 }
 
 document.getElementById('submit').addEventListener('click', async function () {
-    const params =  Array.from(document.getElementsByClassName('params'));
-    params.forEach(param => param.classList.add('hidden'));
+    document.getElementById('params').classList.add('hidden');
 
     if (document.getElementById('chart').classList.contains('hidden')) {
         document.getElementById('loader').classList.remove('hidden');
@@ -22,8 +21,10 @@ document.getElementById('submit').addEventListener('click', async function () {
     const crossoverChance = Number(document.getElementById('input4').value);
     const maxIterations = Number(document.getElementById('input5').value);
     const stopAtBestPossible = document.getElementById('input6').checked;
+    const targetX = Number(document.getElementById('input7').value);
+    const targetY = Number(document.getElementById('input8').value);
 
-    const algo = new Genetic(populationSize, chromosomeSize, mutationChance, crossoverChance);
+    const algo = new Genetic(populationSize, chromosomeSize, mutationChance, crossoverChance, targetX, targetY);
     while (algo.epochCount < maxIterations && ((stopAtBestPossible && algo.bestFitness[algo.bestFitness.length - 1] != 0) || !stopAtBestPossible)) {
         algo.step();
         // console.log("Generation:", algo.epochCount, "Fittest:" , algo.fittest);
@@ -66,10 +67,12 @@ document.getElementById('submit').addEventListener('click', async function () {
     const bestIndividual = algo.bestIndividuals[0];
     document.getElementById('stats').innerHTML = '';
     [
+        createP('Target X: ' + targetX),
+        createP('Target Y: ' + targetY),
         createP('Best individual genes:'),
         createP(bestIndividual.chromosome.join(' ')),
-        createP('X: ' + parseInt(bestIndividual.chromosome.slice(0, bestIndividual.chromosome.length / 2).join(''), 2)),
-        createP('Y: ' + parseInt(bestIndividual.chromosome.slice(bestIndividual.chromosome.length / 2).join(''), 2)),
+        createP('Best individual X: ' + parseInt(bestIndividual.chromosome.slice(0, bestIndividual.chromosome.length / 2).join(''), 2)),
+        createP('Best individual Y: ' + parseInt(bestIndividual.chromosome.slice(bestIndividual.chromosome.length / 2).join(''), 2)),
         createP(`Fitness: ${bestIndividual.fitness}`)
     ].forEach(p => document.getElementById('stats').appendChild(p));
 
