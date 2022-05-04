@@ -13,7 +13,7 @@ Example:
 ```javascript
 import Genetic from './implementations/new.js';
 
-const algo = new Genetic(populationSize, chromosomeSize, mutationChance, crossoverChance);
+const algo = new Genetic(populationSize, chromosomeSize, mutationChance, crossoverChance, targetX, targetY);
 while (algo.epochCount < maxIterations) {
     algo.step();
     console.log("Generation:", algo.epochCount, "Fittest:" , algo.fittest);
