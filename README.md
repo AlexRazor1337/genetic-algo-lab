@@ -26,12 +26,12 @@ There are three implementations of the algorithm. I recommend using `new.js` bec
 
 # Screenshots
 Parameters for the algorithm:
-![main](docs/main.png)
+
 
 Work result:
-![graph](docs/graph.png)
+
 
 # Docs
 
-Class diagram:  
+Class diagram:
 ![Class diagram](docs/class_diagram.png)
