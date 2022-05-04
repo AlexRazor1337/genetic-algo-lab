@@ -26,12 +26,13 @@ There are three implementations of the algorithm. I recommend using `new.js` bec
 
 # Screenshots
 Parameters for the algorithm:
+![Params](https://user-images.githubusercontent.com/26604491/166642871-56aeb78d-6df7-4380-afeb-92afb5975663.png)
 
 
 Work result:
-
+![Results](https://user-images.githubusercontent.com/26604491/166643148-6ca7021e-a854-4a54-8014-3cac49e17c23.png)
 
 # Docs
 
-Class diagram:
+Class diagram:  
 ![Class diagram](docs/class_diagram.png)
